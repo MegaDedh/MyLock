@@ -18,6 +18,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
+
                 android:resource="@xml/widget_metadata">
             </meta-data>
         </receiver>
@@ -30,7 +31,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="act" android:label="@string/app_name" android:theme="@android:style/Theme.Translucent" />
+        <activity   android:name="act"
+                    android:label="@string/app_name"
+                    android:theme="@android:style/Theme.Translucent"
+                    android:excludeFromRecents="true"/>
 
         <receiver android:name=".MyAdmin" android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data android:name="android.app.device_admin"
