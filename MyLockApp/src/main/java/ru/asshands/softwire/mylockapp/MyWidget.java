@@ -9,14 +9,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.DEVICE_POLICY_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MyWidget extends AppWidgetProvider {
 
+    private String TAG = "TAG";
     final static String ACTION_LOCK_NOW = "ru.startandroid.mylock.lock_now";
     public DevicePolicyManager devicePolicyManager;
     private ComponentName compName;
@@ -49,12 +52,16 @@ public class MyWidget extends AppWidgetProvider {
     static void updateWidget(Context ctx, AppWidgetManager appWidgetManager, int widgetID) {
         RemoteViews widgetView = new RemoteViews(ctx.getPackageName(), R.layout.widget);
 
+
+
         // формируем PendingIntent для отправки по нажатию на виджет
         Intent lockIntent = new Intent(ctx, MyWidget.class);
         lockIntent.setAction(ACTION_LOCK_NOW);
         lockIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
         PendingIntent pIntent = PendingIntent.getBroadcast(ctx, widgetID, lockIntent, 0);
         widgetView.setOnClickPendingIntent(R.id.tvBlockNow, pIntent);
+
+
 
         // Обновляем виджет
         appWidgetManager.updateAppWidget(widgetID, widgetView);
@@ -69,7 +76,8 @@ public class MyWidget extends AppWidgetProvider {
         //     Toast.makeText(context, "OnReceive", Toast.LENGTH_SHORT).show();
 
         // Проверяем, что этот intent содержит "заблокировать"
-        if (intent.getAction().equalsIgnoreCase(ACTION_LOCK_NOW)) {
+        if (intent.getAction().equalsIgnoreCase("Nothing to DO")) { // ACTION_LOCK_NOW
+
 
             // извлекаем ID экземпляра
             int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -91,6 +99,8 @@ public class MyWidget extends AppWidgetProvider {
 
             }
         }
+        Log.e(TAG, "Nothing to DO");
+     //   Toast.makeText(context, "Nothing to DO", Toast.LENGTH_SHORT).show();
 devicePolicyManager = null;
 compName = null;
     }

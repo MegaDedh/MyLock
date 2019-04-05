@@ -7,13 +7,26 @@
     tools:context=".ConfigActivity">
 
     <Button
+        android:id="@+id/btnCheckAccessibilityService"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickCheckAccessibilityService"
+        android:text="Check Accessibility Service"/>
+
+    <Button
         android:id="@+id/enableBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="Enable Admin Device features"
         android:layout_centerHorizontal="true"
-        android:onClick="onClick"/>
+        android:onClick="onClick"
+        android:layout_below="@+id/btnCheckAccessibilityService"/>/>
 
     <Button
         android:id="@+id/disableBtn"
