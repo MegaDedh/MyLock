@@ -1,1 +1,1 @@
-include ':MyLockApp', ':accessservice'
+include ':MyLockApp', ':accessservice', ':simplephonebook'

@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -15,19 +16,25 @@ import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.DEVICE_POLICY_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MyWidget extends AppWidgetProvider {
 
-    private String TAG = "TAG";
+    final static  String TAG = "TAG";
     final static String ACTION_LOCK_NOW = "ru.startandroid.mylock.lock_now";
     public DevicePolicyManager devicePolicyManager;
     private ComponentName compName;
+    private boolean useAccessibility;
+
 
 
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+        SharedPreferences sp = context.getSharedPreferences(ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
+        useAccessibility = sp.getBoolean(ConfigActivity.USE_ACCESSIBILITY_SERVICE_PREF, false);
+
 
         // обновляем все экземпляры
         for (int i : appWidgetIds) {
@@ -69,39 +76,41 @@ public class MyWidget extends AppWidgetProvider {
 
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        if (!useAccessibility) {
+            devicePolicyManager = (DevicePolicyManager) context.getSystemService(DEVICE_POLICY_SERVICE);
+            compName = new ComponentName(context, MyAdmin.class);
 
-        devicePolicyManager = (DevicePolicyManager) context.getSystemService(DEVICE_POLICY_SERVICE);
-        compName = new ComponentName(context, MyAdmin.class);
+            //     Toast.makeText(context, "OnReceive", Toast.LENGTH_SHORT).show();
 
-        //     Toast.makeText(context, "OnReceive", Toast.LENGTH_SHORT).show();
+            // Проверяем, что этот intent содержит "заблокировать"
 
-        // Проверяем, что этот intent содержит "заблокировать"
-        if (intent.getAction().equalsIgnoreCase("Nothing to DO")) { // ACTION_LOCK_NOW
+            if (intent.getAction().equalsIgnoreCase(ACTION_LOCK_NOW)) { // ACTION_LOCK_NOW
 
 
-            // извлекаем ID экземпляра
-            int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                mAppWidgetId = extras.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
+                // извлекаем ID экземпляра
+                int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    mAppWidgetId = extras.getInt(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID);
 
-            }
-            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-
-                boolean active = devicePolicyManager.isAdminActive(compName);
-                if (active) {
-                    devicePolicyManager.lockNow();
-                } else {
-                    Toast.makeText(context, "You need to enable the Admin Device Features", Toast.LENGTH_SHORT).show();
                 }
+                if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
 
+                    boolean active = devicePolicyManager.isAdminActive(compName);
+                    if (active) {
+                        devicePolicyManager.lockNow();
+                    } else {
+                        Toast.makeText(context, "You need to enable the Admin Device Features", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
             }
+         //   Log.e(TAG, "Nothing to DO");
+            //   Toast.makeText(context, "Nothing to DO", Toast.LENGTH_SHORT).show();
+            devicePolicyManager = null;
+            compName = null;
         }
-        Log.e(TAG, "Nothing to DO");
-     //   Toast.makeText(context, "Nothing to DO", Toast.LENGTH_SHORT).show();
-devicePolicyManager = null;
-compName = null;
     }
 }

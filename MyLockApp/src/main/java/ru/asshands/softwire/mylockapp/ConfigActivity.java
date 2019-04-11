@@ -1,28 +1,38 @@
 package ru.asshands.softwire.mylockapp;
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
 
 public class ConfigActivity extends Activity {
+    private String TAG = "TAG";
+    private int api = Build.VERSION.SDK_INT;
+    private boolean useAccessibility;
+    public final static String WIDGET_PREF = "widget_pref";
+    public final static String USE_ACCESSIBILITY_SERVICE_PREF = "USE_ACCESSIBILITY_SERVICE_PREF";
 
 
     int widgetID = AppWidgetManager.INVALID_APPWIDGET_ID;
     Intent resultValue;
 
-    private Button ok, disable, enable;
+    private Button ok, disable, enable, btncheckAccessibilityService;
+    private CheckBox chbUseAccessability;
     public static final int RESULT_ENABLE = 11;
     private DevicePolicyManager devicePolicyManager;
     private ComponentName compName;
@@ -59,6 +69,10 @@ public class ConfigActivity extends Activity {
         ok = (Button) findViewById(R.id.okBtn);
         enable = (Button) findViewById(R.id.enableBtn);
         disable = (Button) findViewById(R.id.disableBtn);
+        btncheckAccessibilityService = (Button) findViewById(R.id.btnCheckAccessibilityService);
+        chbUseAccessability = (CheckBox) findViewById(R.id.CheckboxAccessability);
+
+
     }
 
     protected void onResume() {
@@ -66,6 +80,18 @@ public class ConfigActivity extends Activity {
         boolean isActive = devicePolicyManager.isAdminActive(compName);
         disable.setVisibility(isActive ? View.VISIBLE : View.GONE);
         enable.setVisibility(isActive ? View.GONE : View.VISIBLE);
+    //    useAccessability.setVisibility((api >= 28) ? View.VISIBLE : View.GONE);
+        if (api < 28) {
+            useAccessibility = false;
+            chbUseAccessability.setVisibility(View.GONE);
+            btncheckAccessibilityService.setVisibility(View.GONE);
+        }
+        else{
+            SharedPreferences sp = getSharedPreferences(ConfigActivity.WIDGET_PREF, MODE_PRIVATE);
+            useAccessibility = sp.getBoolean(ConfigActivity.USE_ACCESSIBILITY_SERVICE_PREF, false);
+            chbUseAccessability.setChecked(useAccessibility);
+            btncheckAccessibilityService.setVisibility(useAccessibility ? View.VISIBLE : View.GONE);
+            }
     }
 
 
@@ -157,5 +183,15 @@ public class ConfigActivity extends Activity {
     }
 
 
+    public void onCheckboxAccessabilityClicked(View view) {
+        CheckBox chBox = (CheckBox) view;
+        useAccessibility = chBox.isChecked();
+        btncheckAccessibilityService.setVisibility(useAccessibility ? View.VISIBLE : View.GONE);
 
+        SharedPreferences sp = getSharedPreferences(ConfigActivity.WIDGET_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(USE_ACCESSIBILITY_SERVICE_PREF, useAccessibility);
+        editor.commit();
+
+    }
 }

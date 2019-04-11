@@ -6,37 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ConfigActivity">
 
-    <Button
-        android:id="@+id/btnCheckAccessibilityService"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickCheckAccessibilityService"
-        android:text="Check Accessibility Service"/>
+
 
     <Button
         android:id="@+id/enableBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Enable Admin Device features"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:onClick="onClick"
-        android:layout_below="@+id/btnCheckAccessibilityService"/>/>
+        android:text="Enable Admin Device features" />/>
 
     <Button
         android:id="@+id/disableBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Disable Admin Device features"
+        android:layout_below="@id/enableBtn"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:onClick="onClick"
-        android:layout_below="@id/enableBtn"/>
+        android:text="Disable Admin Device features" />
 
     <Button
         android:id="@+id/okBtn"
@@ -47,5 +36,33 @@
         android:layout_marginTop="50dp"
         android:onClick="onClick"
         android:text="Add Widget" />
+
+    <CheckBox
+        android:id="@+id/CheckboxAccessability"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/okBtn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="62dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="0dp"
+        android:layoutDirection="rtl"
+        android:onClick="onCheckboxAccessabilityClicked"
+        android:text="Использовать Accessability Service"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnCheckAccessibilityService"
+        android:layout_below="@id/CheckboxAccessability"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="onClickCheckAccessibilityService"
+        android:text="Check Accessibility Service" />
 
 </RelativeLayout>

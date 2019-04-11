@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:background="@android:drawable/ic_lock_lock"
         android:gravity="bottom|center_horizontal"
-        android:text="Block"
+        android:text="Lock"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
