@@ -16,38 +16,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.e(TAG,"*********************ON CREATE**********************");
-
     }
 
     public void onClickbtnStart(View view) {
 
-        List<Persone> ArrayPersone= new ArrayList<Persone>();
+        PhoneBook myPhoneBook = new PhoneBook(new ArrayList<PhonePersone>());
 
-        ArrayPersone.add(new Persone("Max","Kovalev","10001"));
-        ArrayPersone.add(new Persone("Alexey","Voronin","10003"));
-        ArrayPersone.add(new Persone("Alexander","Bobkov","10003"));
-        ArrayPersone.add(new Persone("Konstantin","Murzin","10004"));
+        Log.e(TAG,myPhoneBook.toString());
+        myPhoneBook = myPhoneBook.addPhonePerson("Max","Kovalev","10001");
+        Log.e(TAG,myPhoneBook.toString());
+        myPhoneBook = myPhoneBook.addPhonePerson("Alexey","Voronin","10002");
+        Log.e(TAG,myPhoneBook.toString());
+        myPhoneBook = myPhoneBook.addPhonePerson("Alexander","Bobkov","10003");
+        Log.e(TAG,myPhoneBook.toString());
+        myPhoneBook = myPhoneBook.addPhonePerson("Konstantin","Murzin","10003");
+        Log.e(TAG,myPhoneBook.toString());
+        myPhoneBook = myPhoneBook.addPhonePerson("Artem","Morozov","10004");
+        Log.e(TAG,myPhoneBook.toString());
 
 
-        String findStr = "ko";
-        List<String> findList= new ArrayList<String>();
-        for (Persone tmpPersone: ArrayPersone) {
-            String fullStrPersone = new String(tmpPersone.getName()+" "+tmpPersone.getSurName()+" "+tmpPersone.getTelNum());
-            String fullStrPersoneLowCase = fullStrPersone.toLowerCase();
-            int findIndex = fullStrPersoneLowCase.indexOf(findStr);
-            if(findIndex != -1){
-                findList.add(fullStrPersone);
-            }
-        }
-        if (findList.size()>0){
-            Log.e(TAG,"Найденные совпадения:");
-            for(String tmpStr : findList){
-                Log.e(TAG,tmpStr);
-            }
-        }
-        else{
-            Log.e(TAG,"Поиск ничего не нашел :(");
-        }
+
+        myPhoneBook.showAll();
+        String toFind="ko";   //<<< будем искать такой фрагмент
+        Log.e(TAG,"*************Поиск совпадений строки: "+toFind+"*******************");
+        myPhoneBook.find(toFind);
+        Log.e(TAG,"******Результат работы equal и hashCode() для 2 и 3 записи: *******");
+        myPhoneBook.testEqual();
+
 
 
     }
